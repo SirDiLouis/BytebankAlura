@@ -1,3 +1,5 @@
+import 'package:bytebank/screens/contacts_list.dart';
+import 'package:bytebank/screens/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,36 +11,18 @@ class BytebankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Dashboard'),
-        ),
-        body: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(15.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(60),
-                child: Image.asset('images/bytebank_logo.png'),
-              ),
-            ),
-            Container(
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20),
-                  color: Colors.green),
-              height: 100,
-              width: 150,
-              child: Column(
-                children: [
-                  Icon(Icons.people),
-                  Text('Contatos'),
-                ],
-              ),
-            ),
-          ],
+      theme: ThemeData(
+        primaryColor: Colors.green[900],
+        accentColor: Colors.blueAccent[700],
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.blueAccent[700],
+          textTheme: ButtonTextTheme.primary,
         ),
       ),
+      debugShowCheckedModeBanner: false,
+      home: Dashboard(),
     );
   }
 }
+
+
