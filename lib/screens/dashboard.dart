@@ -1,3 +1,4 @@
+import 'package:bytebank/components/animation_navigator.dart';
 import 'package:bytebank/screens/contacts_list.dart';
 import 'package:flutter/material.dart';
 
@@ -25,39 +26,22 @@ class Dashboard extends StatelessWidget {
                 child: Image.asset('images/bytebank_logo.png'),
               ),
             ),
-            Material(
-              borderRadius:BorderRadius.circular(20),
-              color: Theme.of(context).primaryColor,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(_createRoute());
-                },
-                child: Container(
-                  height: 100,
-                  width: 150,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.people,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        Text(
-                          'Contatos',
-                          style: TextStyle(
-                            fontSize: 19,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _FeatureItem(
+                  name: 'Transfer',
+                  icon: Icons.monetization_on,
+                  onClick: () {
+                    print('Transfer was click');
+                  },
                 ),
-              ),
+                _FeatureItem(
+                  name: 'Transfer feed',
+                  icon: Icons.description,
+                  onClick: () {},
+                ),
+              ],
             ),
           ],
         ),
@@ -66,20 +50,54 @@ class Dashboard extends StatelessWidget {
   }
 }
 
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ContactsList(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
+class _FeatureItem extends StatelessWidget {
+  final String name;
+  final IconData icon;
+  final Function onClick;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+  const _FeatureItem(
+      {@required this.name, @required this.icon, @required this.onClick});
 
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      borderRadius: BorderRadius.circular(20),
+      color: Theme.of(context).primaryColor,
+      child: InkWell(
+        onTap: () {
+          onClick();
+          Navigator.push(context, RouteNavigator(
+            route: ContactsList(),
+            horizontal: 0.0,
+            vertical: 1.0,
+          ));
+        },
+        child: Container(
+          height: 100,
+          width: 150,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 32,
+                ),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 19,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

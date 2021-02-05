@@ -21,7 +21,7 @@ class _ContactsListState extends State<ContactsList> {
             bottom: Radius.circular(25),
           ),
         ),
-        title: Text('Contatos'),
+        title: Text('Transfer'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),

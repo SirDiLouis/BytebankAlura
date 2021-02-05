@@ -10,7 +10,7 @@ class ContactDao {
   static const String _tableName = 'contacts';
   static const String _id = 'id';
   static const String _name = 'name';
-  static const String _accountNumber = 'account_name';
+  static const String _accountNumber = 'account_number';
 
   Future<int> save(Contact contact) async {
     final Database db = await getDatabase();
