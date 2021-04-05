@@ -1,5 +1,5 @@
-import 'package:bytebank/components/animation_navigator.dart';
 import 'package:bytebank/screens/contacts_list.dart';
+import 'package:bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -15,7 +15,7 @@ class Dashboard extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,13 +33,18 @@ class Dashboard extends StatelessWidget {
                   name: 'Transfer',
                   icon: Icons.monetization_on,
                   onClick: () {
+                    Navigator.of(context).push(
+                      _createRoute(ContactsList()),
+                    );
                     print('Transfer was click');
                   },
                 ),
                 _FeatureItem(
                   name: 'Transfer feed',
                   icon: Icons.description,
-                  onClick: () {},
+                  onClick: () => Navigator.of(context).push(
+                    _createRoute(TransactionsList()),
+                  ),
                 ),
               ],
             ),
@@ -56,7 +61,9 @@ class _FeatureItem extends StatelessWidget {
   final Function onClick;
 
   const _FeatureItem(
-      {@required this.name, @required this.icon, @required this.onClick});
+      {@required this.name, @required this.icon, @required this.onClick})
+      : assert(icon != null),
+        assert(onClick != null);
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +71,7 @@ class _FeatureItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       color: Theme.of(context).primaryColor,
       child: InkWell(
-        onTap: () {
-          onClick();
-          Navigator.push(context, RouteNavigator(
-            route: ContactsList(),
-            horizontal: 0.0,
-            vertical: 1.0,
-          ));
-        },
+        onTap: () => onClick(),
         child: Container(
           height: 100,
           width: 150,
@@ -100,4 +100,22 @@ class _FeatureItem extends StatelessWidget {
       ),
     );
   }
+}
+
+Route _createRoute(Widget toPage) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => toPage,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
