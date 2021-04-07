@@ -1,8 +1,9 @@
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
+import 'package:bytebank/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_animations/loading_animations.dart';
 
 class ContactsList extends StatefulWidget {
   @override
@@ -30,23 +31,31 @@ class _ContactsListState extends State<ContactsList> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
+
             case ConnectionState.waiting:
-              return Center(
-                child: LoadingBouncingGrid.square(
-                  backgroundColor: Colors.green,
-                  inverted: true,
-                  size: 100,
-                ),
-              );
+              return Progress();
               break;
+
             case ConnectionState.active:
               break;
+
             case ConnectionState.done:
               final List<Contact> contacts = snapshot.data;
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contacts[index];
-                  return _ContactItem(contact);
+                  return _ContactItem(
+                    contact,
+                    onClick: () {
+                      Navigator.of(context).push(
+                        _createRoute(
+                          toClass: TransactionForm(contact),
+                          vertical: 1.0,
+                          horizontal: 0.0,
+                        ),
+                      );
+                    },
+                  );
                 },
                 itemCount: contacts.length,
               );
@@ -63,7 +72,13 @@ class _ContactsListState extends State<ContactsList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(_createRoute())
+              .push(
+                _createRoute(
+                  vertical: 0.0,
+                  horizontal: 1.0,
+                  toClass: ContactForm(),
+                ),
+              )
               .then((value) => setState(() {}));
         },
         child: Icon(
@@ -74,11 +89,14 @@ class _ContactsListState extends State<ContactsList> {
   }
 }
 
-Route _createRoute() {
+Route _createRoute(
+    {@required Widget toClass,
+    @required double horizontal,
+    @required double vertical}) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ContactForm(),
+    pageBuilder: (context, animation, secondaryAnimation) => toClass,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(2.0, 0.0);
+      var begin = Offset(horizontal, vertical);
       var end = Offset.zero;
       var curve = Curves.ease;
 
@@ -94,13 +112,15 @@ Route _createRoute() {
 
 class _ContactItem extends StatelessWidget {
   final Contact contact;
+  final Function onClick;
 
-  const _ContactItem(this.contact);
+  const _ContactItem(this.contact, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(contact.name, style: TextStyle(fontSize: 24)),
         subtitle: Text(contact.accountNumber.toString(),
             style: TextStyle(fontSize: 16)),
