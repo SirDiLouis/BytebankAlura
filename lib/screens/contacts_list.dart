@@ -1,4 +1,5 @@
 import 'package:bytebank/components/progress.dart';
+import 'package:bytebank/components/route_animation.dart';
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
@@ -48,7 +49,7 @@ class _ContactsListState extends State<ContactsList> {
                     contact,
                     onClick: () {
                       Navigator.of(context).push(
-                        _createRoute(
+                        createRoute(
                           toClass: TransactionForm(contact),
                           vertical: 1.0,
                           horizontal: 0.0,
@@ -73,7 +74,7 @@ class _ContactsListState extends State<ContactsList> {
         onPressed: () {
           Navigator.of(context)
               .push(
-                _createRoute(
+                createRoute(
                   vertical: 0.0,
                   horizontal: 1.0,
                   toClass: ContactForm(),
@@ -87,27 +88,6 @@ class _ContactsListState extends State<ContactsList> {
       ),
     );
   }
-}
-
-Route _createRoute(
-    {@required Widget toClass,
-    @required double horizontal,
-    @required double vertical}) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => toClass,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(horizontal, vertical);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }
 
 class _ContactItem extends StatelessWidget {

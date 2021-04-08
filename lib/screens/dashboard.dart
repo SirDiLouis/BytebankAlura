@@ -1,3 +1,4 @@
+import 'package:bytebank/components/route_animation.dart';
 import 'package:bytebank/screens/contacts_list.dart';
 import 'package:bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,10 @@ class Dashboard extends StatelessWidget {
                   icon: Icons.monetization_on,
                   onClick: () {
                     Navigator.of(context).push(
-                      _createRoute(ContactsList()),
+                      createRoute(
+                          toClass: ContactsList(),
+                          vertical: 1.0,
+                          horizontal: 0.0),
                     );
                     print('Transfer was click');
                   },
@@ -43,7 +47,10 @@ class Dashboard extends StatelessWidget {
                   name: 'Transfer feed',
                   icon: Icons.description,
                   onClick: () => Navigator.of(context).push(
-                    _createRoute(TransactionsList()),
+                    createRoute(
+                        toClass: TransactionsList(),
+                        vertical: 1.0,
+                        horizontal: 0.0),
                   ),
                 ),
               ],
@@ -100,22 +107,4 @@ class _FeatureItem extends StatelessWidget {
       ),
     );
   }
-}
-
-Route _createRoute(Widget toPage) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => toPage,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }
