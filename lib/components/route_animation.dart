@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 Route createRoute(
     {@required Widget toClass,
-      @required double horizontal,
-      @required double vertical}) {
+    double horizontal = 1.0,
+    double vertical = 1.0}) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => toClass,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
